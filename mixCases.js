@@ -18,4 +18,4 @@ function mixCases(text) {
     return output;
 }
 
-console.log(mixCases("Даже, если Симоньян подсыпит новичка кому надо, то ее это не спасет"));
+console.log(mixCases(``));
