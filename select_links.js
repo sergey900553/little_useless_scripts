@@ -1,8 +1,17 @@
+let links = document.querySelectorAll(".index-container a");
+for (let i = 0; i < links.length; i++) {
+     window.open(links[i], '_blank');
+}
+
+
+
 /* проще
 let elements = document.querySelectorAll(`.video-thumb-info a`);
 let output = Array.from(elements).map(i=>{return i.href}).join("<br>");
 window.open().document.write(output);
 */
+
+
 
 
 function urlSiteCrop(url) {
