@@ -1,7 +1,23 @@
+
+
+function sleep(milliseconds) {
+    let start = new Date().getTime();
+    for (let i = 0; i < 1e7; i++) {
+      if ((new Date().getTime() - start) > milliseconds){
+        break;
+      }
+    }
+  }
+
+
 let links = document.querySelectorAll(".index-container a");
 for (let i = 0; i < links.length; i++) {
+
      window.open(links[i], '_blank');
+     sleep(100);
 }
+
+
 
 
 
