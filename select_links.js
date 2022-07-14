@@ -1,3 +1,15 @@
+/*
+let links = document.querySelectorAll('.pcVideoListItem.js-pop.videoblock.videoBox.canEdit .usernameWrap a');
+let arrayoflinks = [];
+for(var i = 0; i< links.length; i++){
+  arrayoflinks.push(links[i].href)
+}
+
+console.log(arrayoflinks);
+*/
+
+
+
 
 
 function sleep(milliseconds) {
