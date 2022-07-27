@@ -14,6 +14,15 @@ allLinks.forEach((element) => {
 });
 
 let newRedditStyle = [];
-uniqueLinks.forEach(e=>{newRedditStyle.push(urlSiteCrop(e))})
+uniqueLinks.forEach(e=>{newRedditStyle.push(e)});
 
-console.log(newRedditStyle);
+
+
+// console.log(newRedditStyle);
+
+
+newRedditStyle.forEach(function(item, i) {
+    setTimeout(function() {
+      window.open(item, '_blank');
+    }, i * 2000);
+  });
