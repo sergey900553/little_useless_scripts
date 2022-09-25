@@ -14,23 +14,6 @@ if (playlist_action) {
 
 
 
-function ChangeColor() {
-    let allLink = document.querySelectorAll(`.videos.row-3-thumbs.user-playlist.feedSize .full-width .title.display-block a`) ? document.querySelectorAll(`.videos.row-3-thumbs.user-playlist.feedSize .full-width .title.display-block a`) : null;
-    let listDeletes = JSON.parse(localStorage.getItem('items-playlist'));
-    let linksinclude = [];
-
-    for (let i = 0; i < allLink.length; i++) {
-        if (listDeletes.includes(allLink[i].href)) {
-            linksinclude.push(allLink[i]);
-        }
-    }
-    linksinclude.forEach((e) => {
-        e.style = "color: red;"
-    });
-}
-
-ChangeColor();
-
 
 const App = () => {
 
@@ -171,3 +154,23 @@ const root = ReactDOM.createRoot(document.getElementById('react_playlist_button_
 root.render(
     <App/>
 );
+
+
+
+
+function ChangeColor() {
+    let allLink = document.querySelectorAll(`.videos.row-3-thumbs.user-playlist.feedSize .full-width .title.display-block a`) ? document.querySelectorAll(`.videos.row-3-thumbs.user-playlist.feedSize .full-width .title.display-block a`) : null;
+    let listDeletes = JSON.parse(localStorage.getItem('items-playlist'));
+    let linksinclude = [];
+
+    for (let i = 0; i < allLink.length; i++) {
+        if (listDeletes.includes(allLink[i].href)) {
+            linksinclude.push(allLink[i]);
+        }
+    }
+    linksinclude.forEach((e) => {
+        e.style = "color: red;"
+    });
+}
+
+ChangeColor();
