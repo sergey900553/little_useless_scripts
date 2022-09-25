@@ -13,6 +13,7 @@ if (playlist_action) {
 }
 
 
+
 function ChangeColor() {
     let allLink = document.querySelectorAll(`.videos.row-3-thumbs.user-playlist.feedSize .full-width .title.display-block a`) ? document.querySelectorAll(`.videos.row-3-thumbs.user-playlist.feedSize .full-width .title.display-block a`) : null;
     let listDeletes = JSON.parse(localStorage.getItem('items-playlist'));
@@ -29,6 +30,7 @@ function ChangeColor() {
 }
 
 ChangeColor();
+
 
 const App = () => {
 
