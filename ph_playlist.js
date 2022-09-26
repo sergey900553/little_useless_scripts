@@ -117,7 +117,9 @@ const App = () => {
 
     document.addEventListener('keydown', function (e) {
         if (e.ctrlKey && e.code === 'KeyB' && window.location.href.includes("playlist")) {
-            addPlaylist();
+            document.getElementById("updateList").click();
+            document.getElementById("delChannels").click();
+            document.getElementById("delPornoStars").click();
         }
     });
 
@@ -140,8 +142,8 @@ const App = () => {
     return (
         <div id="buttons_wrap" style={buttons_wrap}>
             <button style={btnStyle} className="greyButton light" onClick={updateList} id="updateList">Обновить список</button>
-            <button style={btnStyle} className="greyButton light" onClick={delChannels}>Удалить каналы</button>
-            <button style={btnStyle} className="greyButton light" onClick={delPornoStar}>Удалить порнозвезд</button>
+            <button style={btnStyle} className="greyButton light" onClick={delChannels} id="delChannels">Удалить каналы</button>
+            <button style={btnStyle} className="greyButton light" onClick={delPornoStar} id="delPornoStars">Удалить порнозвезд</button>
             <button style={btnStyle} className="greyButton light" onClick={scrolling}>Скроллинг</button>
             <button style={btnStyle} className="greyButton light" onClick={openAllLinks}>Открыть все профили</button>
             <button style={btnStyle} className="greyButton light" onClick={addPlaylist}>Добавить плейлист в список</button>
