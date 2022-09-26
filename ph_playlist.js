@@ -107,6 +107,25 @@ const App = () => {
         setIsPlaylistInLocal(true);
     }
 
+    
+    function addAllToLocal(){
+        let allLinks = document.querySelectorAll(`.pcVideoListItem.js-pop.videoblock.videoBox.canEdit .wrap .usernameWrap  a`);
+
+        let uniqueLinks = [];
+        allLinks.forEach((element) => {
+            if (!uniqueLinks.includes(element.href)) {
+                uniqueLinks.push(element.href);
+            }
+        });
+
+        let itemsArray = localStorage.getItem('items') ? JSON.parse(localStorage.getItem('items')) : [];
+        itemsArray.push(...uniqueLinks);
+        localStorage.setItem('items', JSON.stringify(itemsArray))
+
+    }
+    
+    
+    
 
     document.addEventListener('keydown', function (e) {
         if (e.shiftKey && e.code === 'KeyB' && window.location.href.includes("playlist")) {
@@ -146,6 +165,7 @@ const App = () => {
             <button style={btnStyle} className="greyButton light" onClick={scrolling}>Скроллинг</button>
             <button style={btnStyle} className="greyButton light" onClick={openAllLinks}>Открыть все профили</button>
             <button style={btnStyle} className="greyButton light" onClick={addPlaylist}>Добавить плейлист в список</button>
+            <button style={btnStyle} className="greyButton light" onClick={addAllToLocal}>Avtl</button>
         </div>
     )
 }
@@ -175,3 +195,10 @@ function ChangeColor() {
 }
 
 ChangeColor();
+
+
+
+
+
+
+
