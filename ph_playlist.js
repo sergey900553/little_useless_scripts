@@ -121,6 +121,7 @@ const App = () => {
             let itemsArray = localStorage.getItem('items') ? JSON.parse(localStorage.getItem('items')) : [];
             itemsArray.push(...uniqueLinks);
             localStorage.setItem('items', JSON.stringify(itemsArray))
+            document.querySelector('#videoPlaylist').remove();
         }
         return false;
     }
