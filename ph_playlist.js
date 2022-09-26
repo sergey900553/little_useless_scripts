@@ -139,7 +139,7 @@ const App = () => {
 
     return (
         <div id="buttons_wrap" style={buttons_wrap}>
-            <button style={btnStyle} className="greyButton light" onClick={updateList}>Обновить список</button>
+            <button style={btnStyle} className="greyButton light" onClick={updateList} id="updateList">Обновить список</button>
             <button style={btnStyle} className="greyButton light" onClick={delChannels}>Удалить каналы</button>
             <button style={btnStyle} className="greyButton light" onClick={delPornoStar}>Удалить порнозвезд</button>
             <button style={btnStyle} className="greyButton light" onClick={scrolling}>Скроллинг</button>
