@@ -108,14 +108,6 @@ const App = () => {
 
 
     document.addEventListener('keydown', function (e) {
-        if (e.shiftKey && e.code === 'KeyB' && window.location.href.includes("playlist")) {
-            updateList();
-            delChannels();
-            delPornoStar();
-        }
-    });
-
-    document.addEventListener('keydown', function (e) {
         if (e.ctrlKey && e.code === 'KeyB' && window.location.href.includes("playlist")) {
             document.getElementById("updateList").click();
             document.getElementById("delChannels").click();
