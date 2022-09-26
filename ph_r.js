@@ -112,7 +112,7 @@ const App = () => {
 
     function ifExistChangeColorOfVideo() {
         let isVideoInclude = (isIncludeInFirstArray || isIncludeInSecondArray || isIncludeInThirdArray);
-        isVideoInclude ? H1.style.color = "red" : H1.style.color = "inherit"
+        isVideoInclude && (H1.style.color = "red");
     }
 
     function Aqua() {
