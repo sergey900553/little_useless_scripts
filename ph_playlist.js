@@ -13,8 +13,6 @@ if (playlist_action) {
 }
 
 
-
-
 const App = () => {
 
     let btnStyle = {
@@ -107,25 +105,26 @@ const App = () => {
         setIsPlaylistInLocal(true);
     }
 
-    
-    function addAllToLocal(){
-        let allLinks = document.querySelectorAll(`.pcVideoListItem.js-pop.videoblock.videoBox.canEdit .wrap .usernameWrap  a`);
 
-        let uniqueLinks = [];
-        allLinks.forEach((element) => {
-            if (!uniqueLinks.includes(element.href)) {
-                uniqueLinks.push(element.href);
-            }
-        });
+    function addAllToLocal() {
 
-        let itemsArray = localStorage.getItem('items') ? JSON.parse(localStorage.getItem('items')) : [];
-        itemsArray.push(...uniqueLinks);
-        localStorage.setItem('items', JSON.stringify(itemsArray))
+        if (confirm("Подтвердить")) {
+            let allLinks = document.querySelectorAll(`.pcVideoListItem.js-pop.videoblock.videoBox.canEdit .wrap .usernameWrap  a`);
 
+            let uniqueLinks = [];
+            allLinks.forEach((element) => {
+                if (!uniqueLinks.includes(element.href)) {
+                    uniqueLinks.push(element.href);
+                }
+            });
+
+            let itemsArray = localStorage.getItem('items') ? JSON.parse(localStorage.getItem('items')) : [];
+            itemsArray.push(...uniqueLinks);
+            localStorage.setItem('items', JSON.stringify(itemsArray))
+        }
+        return false;
     }
-    
-    
-    
+
 
     document.addEventListener('keydown', function (e) {
         if (e.shiftKey && e.code === 'KeyB' && window.location.href.includes("playlist")) {
@@ -142,9 +141,6 @@ const App = () => {
     });
 
 
-
-
-
     let items_playlist_local = localStorage.getItem("items-playlist") ? JSON.parse(localStorage.getItem("items-playlist")) : [];
     let [isPlaylistInLocal, setIsPlaylistInLocal] = React.useState(items_playlist_local.includes(window.location.href));
 
@@ -154,7 +150,6 @@ const App = () => {
     }
 
     ifExistChangeColor();
-
 
 
     return (
@@ -175,8 +170,6 @@ const root = ReactDOM.createRoot(document.getElementById('react_playlist_button_
 root.render(
     <App/>
 );
-
-
 
 
 function ChangeColor() {
