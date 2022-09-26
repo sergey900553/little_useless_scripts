@@ -88,6 +88,7 @@ const App = () => {
                 uniqueLinks.push(element.href);
             }
         });
+        uniqueLinks
 
         uniqueLinks.forEach((item, i) => {
             setTimeout(() => {
@@ -108,10 +109,16 @@ const App = () => {
 
 
     document.addEventListener('keydown', function (e) {
-        if (e.ctrlKey && e.code === 'KeyB' && window.location.href.includes("playlist")) {
+        if (e.shiftKey && e.code === 'KeyB' && window.location.href.includes("playlist")) {
             document.getElementById("updateList").click();
             document.getElementById("delChannels").click();
             document.getElementById("delPornoStars").click();
+        }
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.ctrlKey && e.code === 'KeyB' && window.location.href.includes("playlist")) {
+            addPlaylist();
         }
     });
 
