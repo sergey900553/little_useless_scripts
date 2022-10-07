@@ -103,7 +103,7 @@ const App = () => {
     function deleteList(storage_item_name, setLocal) {
         if (confirm("Подтвердить")) {
             localStorage.removeItem(storage_item_name)
-            setLocal(localStorage.getItem(firstLocalName) ? JSON.parse(localStorage.getItem(firstLocalName)) : []);
+            setLocal(localStorage.getItem(storage_item_name) ? JSON.parse(localStorage.getItem(storage_item_name)) : []);
         }
         return false;
     }
@@ -206,4 +206,3 @@ const root = ReactDOM.createRoot(document.querySelector('#react_shit'));
 root.render(
     <App />
 );
-
