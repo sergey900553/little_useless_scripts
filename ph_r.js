@@ -30,16 +30,16 @@ const App = () => {
     let [firstLocalArray, setFirstLocalArray] = React.useState(localStorage.getItem(firstLocalName) ? JSON.parse(localStorage.getItem(firstLocalName)) : []);
     let [secondLocalArray, setSecondLocalArray] = React.useState(localStorage.getItem(secondLocalName) ? JSON.parse(localStorage.getItem(secondLocalName)) : []);
     let [thirdLocalArray, setThirdLocalArray] = React.useState(localStorage.getItem(thirdLocalName) ? JSON.parse(localStorage.getItem(thirdLocalName)) : []);
-    
-    
+
+
     let isIncludeInFirstArray = (firstLocalArray.includes(link));
     let isIncludeInSecondArray = (secondLocalArray.includes(link));
     let isIncludeInThirdArray = (thirdLocalArray.includes(link));
-    
-    
-    
-    
-    
+
+
+
+
+
     addEventListener('storage', (event) => {
         if (event.key === firstLocalName) {
             setFirstLocalArray(localStorage.getItem(firstLocalName) ? JSON.parse(localStorage.getItem(firstLocalName)) : [])
@@ -47,13 +47,13 @@ const App = () => {
         if (event.key === secondLocalName) {
             setSecondLocalArray(localStorage.getItem(secondLocalName) ? JSON.parse(localStorage.getItem(secondLocalName)) : [])
         }
-    
+
         if (event.key === thirdLocalName) {
             setThirdLocalArray(localStorage.getItem(thirdLocalName) ? JSON.parse(localStorage.getItem(thirdLocalName)) : [])
         }
-    
+
     });
-    
+
 
 
     const stylesContainers = {
@@ -72,7 +72,7 @@ const App = () => {
         if (!storage_item_array.includes(link)) {
             storage_item_array.push(link);
             localStorage.setItem(storage_item_name, JSON.stringify(storage_item_array));
-            setLocal(localStorage.getItem(firstLocalName) ? JSON.parse(localStorage.getItem(firstLocalName)) : []);
+            setLocal(localStorage.getItem(storage_item_name) ? JSON.parse(localStorage.getItem(storage_item_name)) : []);
         }
 
     }
@@ -131,8 +131,13 @@ const App = () => {
 
 
     function ifExistChangeColorOfVideo() {
-        let isVideoInclude = (isIncludeInFirstArray || isIncludeInSecondArray || isIncludeInThirdArray);
-        isVideoInclude && (H1.style.color = "red");
+        let block = Boolean(document.querySelector("#block").style.color);
+        let recheck = Boolean(document.querySelector("#recheck").style.color);
+        let outdate = Boolean(document.querySelector("#outdate").style.color);
+
+        let isVideoInclude = (isIncludeInFirstArray || isIncludeInSecondArray || isIncludeInThirdArray || block || recheck || outdate);
+        isVideoInclude ? (H1.style.color = "red") : (H1.style.color = "inherit");
+       // isVideoInclude && (H1.style.color = "red");
     }
 
     function Aqua() {
@@ -199,6 +204,6 @@ const App = () => {
 
 const root = ReactDOM.createRoot(document.querySelector('#react_shit'));
 root.render(
-    <App/>
+    <App />
 );
 
