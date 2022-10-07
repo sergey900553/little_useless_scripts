@@ -27,13 +27,33 @@ const App = () => {
     let secondLocalName = "items-later";
     let thirdLocalName = "items-cute";
 
-    let firstLocalArray = localStorage.getItem(firstLocalName) ? JSON.parse(localStorage.getItem(firstLocalName)) : [];
-    let secondLocalArray = localStorage.getItem(secondLocalName) ? JSON.parse(localStorage.getItem(secondLocalName)) : [];
-    let thirdLocalArray = localStorage.getItem(thirdLocalName) ? JSON.parse(localStorage.getItem(thirdLocalName)) : [];
-
-    let [isIncludeInFirstArray, setIncludeInFirstArray] = React.useState(firstLocalArray.includes(link));
-    let [isIncludeInSecondArray, setIncludeInSecondArray] = React.useState(secondLocalArray.includes(link));
-    let [isIncludeInThirdArray, setIncludeInThirdArray] = React.useState(thirdLocalArray.includes(link));
+    let [firstLocalArray, setFirstLocalArray] = React.useState(localStorage.getItem(firstLocalName) ? JSON.parse(localStorage.getItem(firstLocalName)) : []);
+    let [secondLocalArray, setSecondLocalArray] = React.useState(localStorage.getItem(secondLocalName) ? JSON.parse(localStorage.getItem(secondLocalName)) : []);
+    let [thirdLocalArray, setThirdLocalArray] = React.useState(localStorage.getItem(thirdLocalName) ? JSON.parse(localStorage.getItem(thirdLocalName)) : []);
+    
+    
+    let isIncludeInFirstArray = (firstLocalArray.includes(link));
+    let isIncludeInSecondArray = (secondLocalArray.includes(link));
+    let isIncludeInThirdArray = (thirdLocalArray.includes(link));
+    
+    
+    
+    
+    
+    addEventListener('storage', (event) => {
+        if (event.key === firstLocalName) {
+            setFirstLocalArray(localStorage.getItem(firstLocalName) ? JSON.parse(localStorage.getItem(firstLocalName)) : [])
+        }
+        if (event.key === secondLocalName) {
+            setSecondLocalArray(localStorage.getItem(secondLocalName) ? JSON.parse(localStorage.getItem(secondLocalName)) : [])
+        }
+    
+        if (event.key === thirdLocalName) {
+            setThirdLocalArray(localStorage.getItem(thirdLocalName) ? JSON.parse(localStorage.getItem(thirdLocalName)) : [])
+        }
+    
+    });
+    
 
 
     const stylesContainers = {
@@ -47,13 +67,13 @@ const App = () => {
         cursor: "pointer",
     }
 
-    function addToLocal(storage_item_name, storage_item_array, isIncludeInLocalArray) {
+    function addToLocal(storage_item_name, storage_item_array, setLocal) {
 
         if (!storage_item_array.includes(link)) {
             storage_item_array.push(link);
+            localStorage.setItem(storage_item_name, JSON.stringify(storage_item_array));
+            setLocal(localStorage.getItem(firstLocalName) ? JSON.parse(localStorage.getItem(firstLocalName)) : []);
         }
-        localStorage.setItem(storage_item_name, JSON.stringify(storage_item_array))
-        isIncludeInLocalArray(true)
 
     }
 
@@ -80,10 +100,10 @@ const App = () => {
         newWidnow.document.close();
     }
 
-    function deleteList(storage_item_name, isIncludeInLocalArray) {
+    function deleteList(storage_item_name, setLocal) {
         if (confirm("Подтвердить")) {
             localStorage.removeItem(storage_item_name)
-            isIncludeInLocalArray(false)
+            setLocal(localStorage.getItem(firstLocalName) ? JSON.parse(localStorage.getItem(firstLocalName)) : []);
         }
         return false;
     }
@@ -157,20 +177,20 @@ const App = () => {
     return (
         <div id="containerOfShit">
             <div style={stylesContainers} className="first-container">
-                <button style={stylesBtn} onClick={() => addToLocal(firstLocalName, firstLocalArray, setIncludeInFirstArray)} id="addToList">{isIncludeInFirstArray ? "Добавлено в список" : "Добавить в список"}</button>
+                <button style={stylesBtn} onClick={() => addToLocal(firstLocalName, firstLocalArray, setFirstLocalArray)} id="addToList">{isIncludeInFirstArray ? "Добавлено в список" : "Добавить в список"}</button>
                 <button style={stylesBtn} onClick={() => showList(firstLocalName)} id="showList">Показать список</button>
-                <button style={stylesBtn} onClick={() => deleteList(firstLocalName, setIncludeInFirstArray)} id="deleteList">Удалить список</button>
+                <button style={stylesBtn} onClick={() => deleteList(firstLocalName, setFirstLocalArray)} id="deleteList">Удалить список</button>
             </div>
             <div style={stylesContainers} className="second-container">
-                <button style={stylesBtn} onClick={() => addToLocal(secondLocalName, secondLocalArray, setIncludeInSecondArray)} id="addToList1">{isIncludeInSecondArray ? "Добавлено в список Inbox" : "Добавить в список Inbox"}</button>
+                <button style={stylesBtn} onClick={() => addToLocal(secondLocalName, secondLocalArray, setSecondLocalArray)} id="addToList1">{isIncludeInSecondArray ? "Добавлено в список Inbox" : "Добавить в список Inbox"}</button>
                 <button style={stylesBtn} onClick={() => showList(secondLocalName)} id="showList1">Показать список Inbox</button>
-                <button style={stylesBtn} onClick={() => deleteList(secondLocalName, setIncludeInSecondArray)} id="deleteList1">Удалить список Inbox</button>
+                <button style={stylesBtn} onClick={() => deleteList(secondLocalName, setSecondLocalArray)} id="deleteList1">Удалить список Inbox</button>
 
             </div>
             <div style={stylesContainers} className="third-container">
-                <button style={stylesBtn} onClick={() => addToLocal(thirdLocalName, thirdLocalArray, setIncludeInThirdArray)} id="addToList2">{isIncludeInThirdArray ? "Добавлено в список 1" : "Добавить в список 1"}</button>
+                <button style={stylesBtn} onClick={() => addToLocal(thirdLocalName, thirdLocalArray, setThirdLocalArray)} id="addToList2">{isIncludeInThirdArray ? "Добавлено в список 1" : "Добавить в список 1"}</button>
                 <button style={stylesBtn} onClick={() => showList(thirdLocalName)} id="showList2">Показать список 1</button>
-                <button style={stylesBtn} onClick={() => deleteList(thirdLocalName, setIncludeInThirdArray)} id="deleteList2">Удалить список 1</button>
+                <button style={stylesBtn} onClick={() => deleteList(thirdLocalName, setThirdLocalArray)} id="deleteList2">Удалить список 1</button>
             </div>
         </div>
     )
@@ -181,5 +201,4 @@ const root = ReactDOM.createRoot(document.querySelector('#react_shit'));
 root.render(
     <App/>
 );
-
 
