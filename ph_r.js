@@ -39,16 +39,16 @@ const App = () => {
 
 
 
-
+    // Чтобы обновлялось в соседних вкладках
     window.addEventListener('storage', (event) => {
         if (event.key === firstLocalName) {
-            setFirstLocalArray(localStorage.getItem(firstLocalName) ? JSON.parse(localStorage.getItem(firstLocalName)) : [])
+            setFirstLocalArray(JSON.parse(localStorage.getItem(firstLocalName) ?? "[]"))
         }
         if (event.key === secondLocalName) {
-            setSecondLocalArray(localStorage.getItem(secondLocalName) ? JSON.parse(localStorage.getItem(secondLocalName)) : [])
+            setSecondLocalArray(JSON.parse(localStorage.getItem(secondLocalName) ?? "[]"))
         }
         if (event.key === thirdLocalName) {
-            setThirdLocalArray(localStorage.getItem(thirdLocalName) ? JSON.parse(localStorage.getItem(thirdLocalName)) : [])
+            setThirdLocalArray(JSON.parse(localStorage.getItem(thirdLocalName) ?? "[]"))
         }
 
     });
@@ -66,16 +66,25 @@ const App = () => {
         cursor: "pointer",
     }
 
-    function addToLocal(storage_item_name, storage_item_array, setLocal) {
 
-        if (!storage_item_array.includes(link)) {
-            storage_item_array.push(link);
-            localStorage.setItem(storage_item_name, JSON.stringify(storage_item_array));
-            setLocal(localStorage.getItem(storage_item_name) ? JSON.parse(localStorage.getItem(storage_item_name)) : []);
+    function addToLocal(storage_item_name, storage_item_array, setLocal) {
+        let storage_item_set = new Set([...storage_item_array]);
+
+        if (storage_item_set.has(link)) {
+            storage_item_set.delete(link);
+        } else {
+            storage_item_set.add(link);
         }
 
+        let setToArray = [...storage_item_set];
+        localStorage.setItem(storage_item_name, JSON.stringify(setToArray));
+        setLocal(setToArray);
     }
-    
+
+
+
+
+
 
     function showList(storage_item) {
         if (!localStorage.getItem(storage_item)) {
@@ -102,26 +111,35 @@ const App = () => {
     }
 
 
-    function waitForElm(selector) {
-        return new Promise(resolve => {
-            if (document.querySelector(selector)) {
-                return resolve(document.querySelector(selector));
+    function waitForElm(selector, target = document.documentElement, timeout = 5000) {
+        return new Promise((resolve, reject) => {
+            const targetElement = target.querySelector(selector);
+
+            if (targetElement) {
+                resolve(targetElement);
+                return;
             }
 
-            const observer = new MutationObserver(mutations => {
-                if (document.querySelector(selector)) {
-                    resolve(document.querySelector(selector));
+            const observer = new MutationObserver((mutations) => {
+                const targetElement = target.querySelector(selector);
+
+                if (targetElement) {
+                    resolve(targetElement);
                     observer.disconnect();
                 }
             });
 
-            observer.observe(document.body, {
+            observer.observe(target, {
                 childList: true,
                 subtree: true
             });
+
+            setTimeout(() => {
+                observer.disconnect();
+                reject(new Error(`Timeout waiting for element matching selector: ${selector}`));
+            }, timeout);
         });
     }
-
 
     function ifExistChangeColorOfVideo() {
         let block = Boolean(document.querySelector("#block").style.color);
@@ -130,10 +148,9 @@ const App = () => {
 
         let isVideoInclude = (isIncludeInFirstArray || isIncludeInSecondArray || isIncludeInThirdArray || block || recheck || outdate);
         isVideoInclude ? (H1.style.color = "red") : (H1.style.color = "inherit");
-        // isVideoInclude && (H1.style.color = "red");
     }
 
-    function Aqua() {
+    function hasIndicator() {
         waitForElm("#containerForCheck").then(() => {
             let color = "#00ff6f";
 
@@ -151,26 +168,36 @@ const App = () => {
     function DelBoxes() {
         let allLinks = document.querySelectorAll(`.pcVideoListItem .usernameWrap a`);
         let linksToDelete = new Set([...firstLocalArray, ...secondLocalArray, ...thirdLocalArray]);
-    
+
         allLinks.forEach(link => {
             if (linksToDelete.has(link.href)) {
                 link.closest("li").remove();
             }
         });
     }
-    
+
 
 
 
     ifExistChangeColorOfVideo();
-    Aqua();
+    hasIndicator();
     DelBoxes();
 
-    document.addEventListener('keydown', function (e) {
-        if (e.ctrlKey && e.code === 'KeyB') {
-            document.getElementById("addToList").click();
-        }
-    });
+
+    React.useEffect(() => {
+        const handleKeyPress = (e) => {
+          if (e.ctrlKey && e.code === 'KeyB') {
+            addToLocal(firstLocalName, firstLocalArray, setFirstLocalArray);
+          }
+        };
+      
+        document.addEventListener('keydown', handleKeyPress);
+      
+        return () => {
+          document.removeEventListener('keydown', handleKeyPress);
+        };
+      }, [firstLocalName, firstLocalArray]); // Добавляем зависимости
+      
 
 
     return (
