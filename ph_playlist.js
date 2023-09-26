@@ -15,6 +15,11 @@ if (playlist_action) {
 
 const App = () => {
 
+    let firstLocalName = "items";
+    let secondLocalName = "items-later";
+    let thirdLocalName = "items-cute";
+
+
     let btnStyle = {
         marginLeft: "5px",
         cursor: "pointer",
@@ -29,20 +34,19 @@ const App = () => {
 
 
     function updateList() {
-        let firstLocalArray = localStorage.getItem("items") ? JSON.parse(localStorage.getItem("items")) : [];
-        let secondLocalArray = localStorage.getItem("items-later") ? JSON.parse(localStorage.getItem("items-later")) : [];
-        let thirdLocalArray = localStorage.getItem("items-cute") ? JSON.parse(localStorage.getItem("items-cute")) : [];
+        let firstLocalArray = JSON.parse(localStorage.getItem(firstLocalName) ?? "[]");
+        let secondLocalArray = JSON.parse(localStorage.getItem(secondLocalName) ?? "[]");
+        let thirdLocalArray = JSON.parse(localStorage.getItem(thirdLocalName) ?? "[]");
 
-        let listDeletes = [...firstLocalArray, ...secondLocalArray, ...thirdLocalArray];
+        let linksToDelete = new Set([...firstLocalArray, ...secondLocalArray, ...thirdLocalArray]);
         let allLinks = document.querySelectorAll(`.pcVideoListItem .usernameWrap a`);
-        let linksIncludes = [];
 
-        allLinks.forEach(e => {
-            if (listDeletes.includes(e.href)) {
-                linksIncludes.push(e);
+
+        allLinks.forEach(link => {
+            if (linksToDelete.has(link.href)) {
+                link.closest("li").remove();
             }
         });
-        linksIncludes.forEach(e => e.closest("li").remove());
     }
 
     function delChannels() {
@@ -67,26 +71,27 @@ const App = () => {
     }
 
     function scrolling() {
-        let id2 = setInterval(() => window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'}), 1000);
-        let id1 = setInterval(() => window.scrollTo({top: document.body.scrollHeight - 2000, behavior: 'smooth'}), 2000);
+        const scrollDownInterval = setInterval(() => {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }, 1000);
 
-        setTimeout(function () {
-            clearInterval(id1);
-            clearInterval(id2);
+        const scrollUpInterval = setInterval(() => {
+            window.scrollTo({ top: document.body.scrollHeight - 2000, behavior: 'smooth' });
+        }, 2000);
+
+        setTimeout(() => {
+            clearInterval(scrollDownInterval);
+            clearInterval(scrollUpInterval);
         }, 30000);
     }
 
-
     function openAllLinks() {
-        let allLinks = document.querySelectorAll(`.pcVideoListItem.js-pop.videoblock.videoBox.canEdit .wrap .usernameWrap  a`);
+        const allLinks = document.querySelectorAll(`.pcVideoListItem.js-pop.videoblock.videoBox.canEdit .wrap .usernameWrap  a`);
+        const uniqueLinks = new Set();
 
-        let uniqueLinks = [];
         allLinks.forEach((element) => {
-            if (!uniqueLinks.includes(element.href)) {
-                uniqueLinks.push(element.href);
-            }
+            uniqueLinks.add(element.href);
         });
-        uniqueLinks
 
         uniqueLinks.forEach((item, i) => {
             setTimeout(() => {
@@ -95,62 +100,13 @@ const App = () => {
         });
     }
 
-
-    function addPlaylist() {
-        let itemsArray = localStorage.getItem('items-playlist') ? JSON.parse(localStorage.getItem('items-playlist')) : [];
-        if (!itemsArray.includes(window.location.href)) {
-            itemsArray.push(window.location.href);
-        }
-        localStorage.setItem('items-playlist', JSON.stringify(itemsArray))
-        setIsPlaylistInLocal(true);
-    }
-
-
-    function addAllToLocal() {
-
-        if (confirm("Подтвердить")) {
-            let allLinks = document.querySelectorAll(`.pcVideoListItem.js-pop.videoblock.videoBox.canEdit .wrap .usernameWrap  a`);
-
-            let uniqueLinks = [];
-            allLinks.forEach((element) => {
-                if (!uniqueLinks.includes(element.href)) {
-                    uniqueLinks.push(element.href);
-                }
-            });
-
-            let itemsArray = localStorage.getItem('items') ? JSON.parse(localStorage.getItem('items')) : [];
-            itemsArray.push(...uniqueLinks);
-            localStorage.setItem('items', JSON.stringify(itemsArray))
-            document.querySelector('#videoPlaylist').remove();
-        }
-        return false;
-    }
-
-
     document.addEventListener('keydown', function (e) {
-        if (e.shiftKey && e.code === 'KeyB' && window.location.href.includes("playlist")) {
-            document.getElementById("updateList").click();
-            document.getElementById("delChannels").click();
-            document.getElementById("delPornoStars").click();
-        }
-    });
-
-    document.addEventListener('keydown', function (e) {
-        if (e.ctrlKey && e.code === 'KeyB' && window.location.href.includes("playlist")) {
-            addPlaylist();
+        if (e.shiftKey && e.code === 'KeyB') {
+            updateList();
         }
     });
 
 
-    let items_playlist_local = localStorage.getItem("items-playlist") ? JSON.parse(localStorage.getItem("items-playlist")) : [];
-    let [isPlaylistInLocal, setIsPlaylistInLocal] = React.useState(items_playlist_local.includes(window.location.href));
-
-    function ifExistChangeColor() {
-        let playlistName = document.querySelector(".playlistTitle.watchPlaylistButton.js-watchPlaylistHeader.js-watchPlaylist");
-        isPlaylistInLocal && (playlistName.style.cssText = "color: red;");
-    }
-
-    ifExistChangeColor();
 
 
     return (
@@ -160,8 +116,6 @@ const App = () => {
             <button style={btnStyle} className="greyButton light" onClick={delPornoStar} id="delPornoStars">Удалить порнозвезд</button>
             <button style={btnStyle} className="greyButton light" onClick={scrolling}>Скроллинг</button>
             <button style={btnStyle} className="greyButton light" onClick={openAllLinks}>Открыть все профили</button>
-            <button style={btnStyle} className="greyButton light" onClick={addPlaylist}>Добавить плейлист в список</button>
-            <button style={btnStyle} className="greyButton light" onClick={addAllToLocal}>Avtl</button>
         </div>
     )
 }
@@ -169,28 +123,8 @@ const App = () => {
 
 const root = ReactDOM.createRoot(document.getElementById('react_playlist_button_wrap'));
 root.render(
-    <App/>
+    <App />
 );
-
-
-function ChangeColor() {
-    let allLink = document.querySelectorAll(`.videos.row-3-thumbs.user-playlist.feedSize .full-width .title.display-block a`) ? document.querySelectorAll(`.videos.row-3-thumbs.user-playlist.feedSize .full-width .title.display-block a`) : null;
-    let listDeletes = JSON.parse(localStorage.getItem('items-playlist'));
-    let linksinclude = [];
-
-    for (let i = 0; i < allLink.length; i++) {
-        if (listDeletes.includes(allLink[i].href)) {
-            linksinclude.push(allLink[i]);
-        }
-    }
-    linksinclude.forEach((e) => {
-        e.style = "color: red;"
-    });
-}
-
-ChangeColor();
-
-
 
 
 
