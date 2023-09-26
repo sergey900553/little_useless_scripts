@@ -27,9 +27,9 @@ const App = () => {
     let secondLocalName = "items-later";
     let thirdLocalName = "items-cute";
 
-    let [firstLocalArray, setFirstLocalArray] = React.useState(localStorage.getItem(firstLocalName) ? JSON.parse(localStorage.getItem(firstLocalName)) : []);
-    let [secondLocalArray, setSecondLocalArray] = React.useState(localStorage.getItem(secondLocalName) ? JSON.parse(localStorage.getItem(secondLocalName)) : []);
-    let [thirdLocalArray, setThirdLocalArray] = React.useState(localStorage.getItem(thirdLocalName) ? JSON.parse(localStorage.getItem(thirdLocalName)) : []);
+    let [firstLocalArray, setFirstLocalArray] = React.useState(JSON.parse(localStorage.getItem(firstLocalName) ?? "[]"));
+    let [secondLocalArray, setSecondLocalArray] = React.useState(JSON.parse(localStorage.getItem(secondLocalName) ?? "[]"));
+    let [thirdLocalArray, setThirdLocalArray] = React.useState(JSON.parse(localStorage.getItem(thirdLocalName) ?? "[]"));
 
 
     let isIncludeInFirstArray = (firstLocalArray.includes(link));
@@ -40,14 +40,13 @@ const App = () => {
 
 
 
-    addEventListener('storage', (event) => {
+    window.addEventListener('storage', (event) => {
         if (event.key === firstLocalName) {
             setFirstLocalArray(localStorage.getItem(firstLocalName) ? JSON.parse(localStorage.getItem(firstLocalName)) : [])
         }
         if (event.key === secondLocalName) {
             setSecondLocalArray(localStorage.getItem(secondLocalName) ? JSON.parse(localStorage.getItem(secondLocalName)) : [])
         }
-
         if (event.key === thirdLocalName) {
             setThirdLocalArray(localStorage.getItem(thirdLocalName) ? JSON.parse(localStorage.getItem(thirdLocalName)) : [])
         }
@@ -76,29 +75,23 @@ const App = () => {
         }
 
     }
+    
 
     function showList(storage_item) {
-        if (JSON.parse(localStorage.getItem(storage_item)) == null) {
+        if (!localStorage.getItem(storage_item)) {
             alert("Список пустой");
             return;
         }
 
-        function urlSiteCrop(url) {
-            let output = url.replace(/^/, `"`).replace(/$/, `",`);
-            return output;
-        }
-
         let itemsArray = JSON.parse(localStorage.getItem(storage_item));
 
-        let output = [];
-        for (let i = 0; i < itemsArray.length; i++) {
-            output[i] = urlSiteCrop(itemsArray[i]) + ("<br>");
-        }
+        let formatedUrls = itemsArray.join('</br>');
 
         let newWidnow = window.open();
-        newWidnow.document.write(output.join(""));
+        newWidnow.document.write(formatedUrls);
         newWidnow.document.close();
     }
+
 
     function deleteList(storage_item_name, setLocal) {
         if (confirm("Подтвердить")) {
@@ -137,7 +130,7 @@ const App = () => {
 
         let isVideoInclude = (isIncludeInFirstArray || isIncludeInSecondArray || isIncludeInThirdArray || block || recheck || outdate);
         isVideoInclude ? (H1.style.color = "red") : (H1.style.color = "inherit");
-       // isVideoInclude && (H1.style.color = "red");
+        // isVideoInclude && (H1.style.color = "red");
     }
 
     function Aqua() {
@@ -154,19 +147,20 @@ const App = () => {
         });
     }
 
+
     function DelBoxes() {
         let allLinks = document.querySelectorAll(`.pcVideoListItem .usernameWrap a`);
-        let linksIncludes = [];
-        let allArrays = [...firstLocalArray, ...secondLocalArray, ...thirdLocalArray];
-
-        for (let i = 0; i < allLinks.length; i++) {
-            if (allArrays.includes(allLinks[i].href)) {
-                linksIncludes.push(allLinks[i]);
+        let linksToDelete = new Set([...firstLocalArray, ...secondLocalArray, ...thirdLocalArray]);
+    
+        allLinks.forEach(link => {
+            if (linksToDelete.has(link.href)) {
+                link.closest("li").remove();
             }
-        }
-
-        linksIncludes.forEach(e => e.closest("li").remove());
+        });
     }
+    
+
+
 
     ifExistChangeColorOfVideo();
     Aqua();
