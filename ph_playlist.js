@@ -100,12 +100,19 @@ const App = () => {
         });
     }
 
-    document.addEventListener('keydown', function (e) {
-        if (e.shiftKey && e.code === 'KeyB') {
-            updateList();
-        }
-    });
 
+
+    React.useEffect(() => {
+        const handleKeyPress = e => {
+            if (e.shiftKey && e.code === 'KeyB') {
+                updateList();
+            }
+        };
+        document.addEventListener('keydown', handleKeyPress);
+        return () => {
+            document.removeEventListener('keydown', handleKeyPress);
+        };
+    }, []);
 
 
 
@@ -125,7 +132,6 @@ const root = ReactDOM.createRoot(document.getElementById('react_playlist_button_
 root.render(
     <App />
 );
-
 
 
 
